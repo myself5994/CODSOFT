@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+void printBoard(const vector<char>& board) {
+    cout << " " << board[0] << " | " << board[1] << " | " << board[2] << endl;
+    cout << "-----------" << endl;
+    cout << " " << board[3] << " | " << board[4] << " | " << board[5] << endl;
+    cout << "-----------" << endl;
+    cout << " " << board[6] << " | " << board[7] << " | " << board[8] << endl;
+}
+bool checkWinner(const vector<char>& board, char player) {
+    // Check rows, columns, and diagonals
+    return ((board[0] == player && board[1] == player && board[2] == player) || 
+            (board[3] == player && board[4] == player && board[5] == player) || 
+            (board[6] == player && board[7] == player && board[8] == player) || 
+            (board[0] == player && board[3] == player && board[6] == player) || 
+            (board[1] == player && board[4] == player && board[7] == player) || 
+            (board[2] == player && board[5] == player && board[8] == player) || 
+            (board[0] == player && board[4] == player && board[8] == player) || 
+            (board[2] == player && board[4] == player && board[6] == player));
+}
+bool isDraw(const vector<char>& board) {
+    for (char cell : board) {
+        if (cell == ' ') {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    while (true) {
+        vector<char> board(9, ' ');
+        char currentPlayer = 'X';
+
+        while (true) {
+            printBoard(board);
+            int move;
+            cout << "Player " << currentPlayer << ", enter your move (1-9): ";
+            cin >> move;
+
+            // Check if the cell is empty
+            if (board[move - 1] == ' ') {
+                board[move - 1] = currentPlayer;
+
+                // Check for a winner
+                if (checkWinner(board, currentPlayer)) {
+                    printBoard(board);
+                    cout << "Player " << currentPlayer << " wins!" << endl;
+                    break;
+                }
+                if (isDraw(board)) {
+                    printBoard(board);
+                    cout << "It's a draw!" << endl;
+                    break;
+                }
+
+                // Switch players
+                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+            } else {
+                cout << "That cell is already taken. Try again." << endl;
+            }
+        }
+
+        char playAgain;
+        cout << "Do you want to play again? (y/n): ";
+        cin >> playAgain;
+        if (playAgain != 'y' && playAgain != 'Y') {
+            break;
+        }
+    }
+
+    return 0;
+}
